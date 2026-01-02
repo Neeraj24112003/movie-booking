@@ -1,0 +1,12 @@
+{
+    "name": "online-movie-ticket-system",
+    "version": "1.0.0",
+    "description": "Production build wrapper",
+    "main": "server/index.js",
+    "scripts": {
+        "install-client": "cd client && npm install",
+        "install-server": "cd server && npm install",
+        "build": "npm run install-client && cd client && npm run build",
+        "start": "node server/index.js"
+    }
+}

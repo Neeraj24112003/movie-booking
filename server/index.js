@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import authRouter from './routes/authRoute.js';
 import movieRouter from './routes/movieRoute.js';
 import theaterRouter from './routes/theaterRoute.js';
@@ -33,8 +34,16 @@ app.use('/api/theaters', theaterRouter);
 app.use('/api/shows', showRouter);
 app.use('/api/bookings', bookingRouter);
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.send('Online Movie Ticket Booking API is running...');
+});
+
+const __dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 // Error handling middleware
