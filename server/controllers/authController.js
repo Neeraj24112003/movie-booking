@@ -40,3 +40,37 @@ export const login = async (req, res, next) => {
 export const logout = (req, res) => {
     res.clearCookie('access_token').status(200).json('Signout success!');
 };
+
+export const getCurrentUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+        const { password, ...rest } = user._doc;
+        res.status(200).json(rest);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const addFunds = async (req, res, next) => {
+    try {
+        const { amount } = req.body;
+        if (!amount || amount <= 0) return res.status(400).json({ success: false, message: 'Invalid amount' });
+
+        const user = await User.findById(req.user.id);
+        user.walletBalance += Number(amount);
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Funds added successfully", walletBalance: user.walletBalance });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await User.find({}).select("-password");
+        res.status(200).json({ success: true, users });
+    } catch (error) {
+        next(error);
+    }
+};

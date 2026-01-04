@@ -7,9 +7,9 @@ const showSchema = new mongoose.Schema({
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     price: {
-        Regular: { type: Number, required: true },
-        Premium: { type: Number },
-        Recliner: { type: Number }
+        Classic: { type: Number, required: true },
+        Prime: { type: Number },
+        Premium: { type: Number }
     },
     bookedSeats: [{
         seatNumber: String, // e.g., "A1"

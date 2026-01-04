@@ -20,13 +20,16 @@ export default function Navbar() {
                         <li className="hidden sm:inline hover:text-primary cursor-pointer transition">Home</li>
                     </Link>
                     {currentUser ? (
-                        <Link to="/profile">
-                            <img
-                                className="rounded-full h-8 w-8 object-cover border-2 border-primary"
-                                src={currentUser.profilePicture}
-                                alt="profile"
-                            />
-                        </Link>
+                        <div className="flex items-center gap-2">
+                            <span className="text-zinc-300 text-sm hidden sm:inline">Welcome, {currentUser.username}</span>
+                            <Link to="/profile">
+                                <img
+                                    className="rounded-full h-8 w-8 object-cover border-2 border-primary"
+                                    src={currentUser.profilePicture}
+                                    alt="profile"
+                                />
+                            </Link>
+                        </div>
                     ) : (
                         <Link to="/sign-in">
                             <li className="bg-primary px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition">Sign in</li>

@@ -9,12 +9,22 @@ dotenv.config();
 const seedData = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
+        if (process.env.FORCE_SEED !== 'true') {
+            console.error('ERROR: Seeding overrides existing data!');
+            console.error('To run safety, use: FORCE_SEED=true node seed.js');
+            process.exit(1);
+        }
+
         console.log('Connected to MongoDB for seeding...');
 
         // Clear existing data
         await Movie.deleteMany({});
         await Theater.deleteMany({});
         await Show.deleteMany({});
+        // Better: Delete only non-archived shows. We need to find Archived Movie ID first?
+        // Simpler: Just block the seed script entirely.
+
+
 
         // Create Movies
         const movies = await Movie.insertMany([
@@ -70,7 +80,7 @@ const seedData = async () => {
                 screenName: "Screen 1",
                 startTime: new Date(new Date().setHours(18, 0, 0, 0)),
                 endTime: new Date(new Date().setHours(21, 15, 0, 0)),
-                price: { Regular: 250, Premium: 450, Recliner: 600 },
+                price: { Classic: 250, Premium: 450, Prime: 600 },
                 bookedSeats: []
             },
             {
@@ -79,7 +89,7 @@ const seedData = async () => {
                 screenName: "Screen 1",
                 startTime: new Date(new Date().setHours(21, 30, 0, 0)),
                 endTime: new Date(new Date().setHours(0, 30, 0, 0)),
-                price: { Regular: 300, Premium: 500, Recliner: 700 },
+                price: { Classic: 300, Premium: 500, Prime: 700 },
                 bookedSeats: []
             }
         ];

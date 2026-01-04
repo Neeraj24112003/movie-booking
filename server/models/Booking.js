@@ -5,8 +5,10 @@ const bookingSchema = new mongoose.Schema({
     show: { type: mongoose.Schema.Types.ObjectId, ref: 'Show', required: true },
     seats: [{ type: String, required: true }],
     totalPrice: { type: Number, required: true },
-    paymentStatus: { type: String, enum: ['Pending', 'Completed', 'Failed'], default: 'Pending' },
+    paymentStatus: { type: String, enum: ['Pending', 'Completed', 'Failed', 'Cancelled'], default: 'Pending' },
     paymentId: { type: String },
+    refundAmount: { type: Number, default: 0 },
+    amountPaidByWallet: { type: Number, default: 0 },
     bookingDate: { type: Date, default: Date.now }
 }, { timestamps: true });
 

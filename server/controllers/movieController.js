@@ -1,4 +1,5 @@
 import Movie from '../models/Movie.js';
+import mongoose from 'mongoose';
 
 export const createMovie = async (req, res, next) => {
     try {
@@ -11,7 +12,8 @@ export const createMovie = async (req, res, next) => {
 
 export const getMovies = async (req, res, next) => {
     try {
-        const movies = await Movie.find({ isActive: true });
+        const movies = await Movie.find();
+        console.log(`[API] getMovies found ${movies.length} movies`);
         res.status(200).json(movies);
     } catch (error) {
         next(error);

@@ -16,15 +16,17 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'],
     credentials: true
 }));
 app.use(cookieParser());
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URL)
+    .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
     .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
@@ -40,10 +42,10 @@ app.get('/api', (req, res) => {
 
 const __dirname = path.resolve();
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
 });
 
 // Error handling middleware

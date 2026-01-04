@@ -33,11 +33,11 @@ export default function Home() {
                                 <img
                                     src={movie.posterUrl}
                                     alt={movie.title}
-                                    className="w-full h-80 object-cover"
+                                    className="w-full h-80 object-contain bg-zinc-950"
                                 />
                                 <div className="p-4">
                                     <h2 className="font-bold text-lg truncate">{movie.title}</h2>
-                                    <p className="text-zinc-400 text-sm">{movie.genre.join(', ')}</p>
+                                    <p className="text-zinc-400 text-sm">{movie.genre?.join(', ') || 'Unknown Genre'}</p>
                                     <p className="text-zinc-500 text-xs mt-1">{movie.language} • {movie.duration}m</p>
                                 </div>
                             </div>

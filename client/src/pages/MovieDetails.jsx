@@ -37,7 +37,7 @@ export default function MovieDetails() {
                 <img
                     src={movie.posterUrl}
                     alt={movie.title}
-                    className="w-full md:w-1/3 rounded-lg shadow-2xl h-[500px] object-cover"
+                    className="w-full md:w-1/3 rounded-lg shadow-2xl h-auto object-contain bg-zinc-950"
                 />
                 <div className="flex-1">
                     <h1 className="text-4xl font-bold text-white mb-2">{movie.title}</h1>
@@ -61,22 +61,25 @@ export default function MovieDetails() {
                         <h2 className="text-2xl font-semibold text-primary">Select Showtimes</h2>
                         {shows.length > 0 ? (
                             <div className="grid grid-cols-1 gap-4">
-                                {shows.map(show => (
-                                    <div key={show._id} className="bg-zinc-900 p-4 rounded-lg flex justify-between items-center border border-zinc-800 hover:border-primary transition">
-                                        <div>
-                                            <p className="font-bold text-lg">{show.theater.name}</p>
-                                            <p className="text-zinc-500 text-sm">{show.theater.location}, {show.theater.city}</p>
-                                            <p className="text-primary font-semibold mt-1">
-                                                {moment(show.startTime).format('hh:mm A')} - {show.screenName}
-                                            </p>
+                                {shows.map(show => {
+                                    if (!show.theater) return null;
+                                    return (
+                                        <div key={show._id} className="bg-zinc-900 p-4 rounded-lg flex justify-between items-center border border-zinc-800 hover:border-primary transition">
+                                            <div>
+                                                <p className="font-bold text-lg">{show.theater.name}</p>
+                                                <p className="text-zinc-500 text-sm">{show.theater.location}, {show.theater.city}</p>
+                                                <p className="text-primary font-semibold mt-1">
+                                                    {moment(show.startTime).format('hh:mm A')} - {show.screenName}
+                                                </p>
+                                            </div>
+                                            <Link to={`/show/${show._id}`}>
+                                                <button className="bg-primary px-6 py-2 rounded-md font-bold hover:bg-red-700 transition">
+                                                    Book Now
+                                                </button>
+                                            </Link>
                                         </div>
-                                        <Link to={`/show/${show._id}`}>
-                                            <button className="bg-primary px-6 py-2 rounded-md font-bold hover:bg-red-700 transition">
-                                                Book Now
-                                            </button>
-                                        </Link>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         ) : (
                             <p className="text-zinc-500">No shows available for this movie.</p>
