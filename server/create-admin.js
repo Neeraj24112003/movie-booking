@@ -12,9 +12,9 @@ const createAdminUser = async () => {
         console.log('Connected to MongoDB...');
 
         const adminCredentials = {
-            username: 'AdminUser',
-            email: 'admin@example.com',
-            password: 'admin123', // Clean, simple password
+            username: 'Admin',
+            email: 'admin@gmail.com',
+            password: 'Pass@123',
             role: 'admin'
         };
 
@@ -22,7 +22,7 @@ const createAdminUser = async () => {
         const existingUser = await User.findOne({ email: adminCredentials.email });
         if (existingUser) {
             console.log('Admin user already exists. Updating role to admin just in case...');
-            existingUser.role = 'admin';
+            existingUser.role = adminCredentials.role;
             // Optional: Reset password if you want validation
             existingUser.password = bcrypt.hashSync(adminCredentials.password, 10);
             await existingUser.save();
@@ -34,7 +34,7 @@ const createAdminUser = async () => {
                 username: adminCredentials.username,
                 email: adminCredentials.email,
                 password: hashedPassword,
-                role: 'admin'
+                role: adminCredentials.role
             });
             await newUser.save();
             console.log('Admin user created successfully.');

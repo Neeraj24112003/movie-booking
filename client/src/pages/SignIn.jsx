@@ -31,7 +31,11 @@ export default function SignIn() {
                 timer: 1500,
                 showConfirmButton: false,
             });
-            navigate('/');
+            if (res.data.role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
         } catch (error) {
             dispatch(signInFailure(error.response?.data?.message || 'Something went wrong'));
         }

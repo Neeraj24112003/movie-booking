@@ -111,6 +111,8 @@ export default function SeatSelection() {
     if (loading) return <div className="text-center mt-20 text-2xl">Loading Seats...</div>;
     if (!show) return <div className="text-center mt-20 text-2xl">Show not found or Error loading data.</div>;
 
+    const isPast = new Date(show.startTime) < new Date();
+
     return (
         <div className="max-w-4xl mx-auto p-4 flex flex-col items-center">
             <h1 className="text-3xl font-bold mt-8 text-primary uppercase tracking-widest">{show.movie.title}</h1>
@@ -176,6 +178,11 @@ export default function SeatSelection() {
                 <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 p-6 border-t border-zinc-800 animate-slide-up font-sans">
                     <div className="max-w-4xl mx-auto flex justify-between items-center">
                         <div>
+                            {isPast && (
+                                <div className="mb-4 p-3 bg-red-900/30 border border-red-900 rounded text-red-500 text-sm font-bold flex items-center gap-2">
+                                    <span>⚠️ This show has already started or completed. You cannot book tickets now.</span>
+                                </div>
+                            )}
                             <p className="text-zinc-400 text-sm">Selected Seats: <span className="text-white font-bold">{selectedSeats.join(', ')}</span></p>
                             <p className="text-2xl font-bold">Total: <span className="text-primary">₹{calculateTotal()}</span></p>
                             {walletBalance > 0 && (
@@ -184,10 +191,11 @@ export default function SeatSelection() {
                                         type="checkbox"
                                         id="useWallet"
                                         checked={useWallet}
+                                        disabled={isPast}
                                         onChange={(e) => setUseWallet(e.target.checked)}
                                         className="w-4 h-4 accent-primary"
                                     />
-                                    <label htmlFor="useWallet" className="text-sm cursor-pointer select-none">
+                                    <label htmlFor="useWallet" className={`text-sm cursor-pointer select-none ${isPast ? 'text-zinc-600' : ''}`}>
                                         Use Wallet Balance (Available: <span className="font-bold text-green-500">₹{walletBalance}</span>)
                                     </label>
                                 </div>
@@ -200,9 +208,10 @@ export default function SeatSelection() {
                         </div>
                         <button
                             onClick={handleBooking}
-                            className="bg-primary px-10 py-3 rounded-full font-bold hover:bg-red-700 transition transform hover:scale-105 shadow-xl shadow-red-900/20"
+                            disabled={isPast}
+                            className={`px-10 py-3 rounded-full font-bold transition transform shadow-xl shadow-red-900/20 ${isPast ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed hover:scale-100' : 'bg-primary hover:bg-red-700 hover:scale-105'}`}
                         >
-                            {useWallet && walletBalance >= calculateTotal() ? 'Pay with Wallet' : 'Confirm Booking'}
+                            {isPast ? 'Booking Closed' : (useWallet && walletBalance >= calculateTotal() ? 'Pay with Wallet' : 'Confirm Booking')}
                         </button>
                     </div>
                 </div>

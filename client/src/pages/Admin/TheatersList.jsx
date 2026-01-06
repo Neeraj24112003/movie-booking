@@ -112,6 +112,7 @@ function TheatersList() {
                     />
                 </Modal>
             )}
+
         </div>
     );
 }

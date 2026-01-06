@@ -27,8 +27,12 @@ export const getShows = async (req, res, next) => {
         if (movieId) query.movie = movieId;
         if (theaterId) query.theater = theaterId;
 
+        // If movieId is provided, we default to only upcoming shows for users
+        if (movieId) {
+            query.startTime = { $gte: new Date() };
+        }
 
-        const shows = await Show.find(query).populate('movie').populate('theater');
+        const shows = await Show.find(query).populate('movie').populate('theater').sort({ startTime: 1 });
         res.status(200).json(shows);
     } catch (error) {
         next(error);

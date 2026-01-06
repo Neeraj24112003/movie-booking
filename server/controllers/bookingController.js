@@ -8,6 +8,11 @@ export const createBooking = async (req, res, next) => {
         const show = await Show.findById(showId);
         if (!show) return res.status(404).json({ message: 'Show not found' });
 
+        // Prevent booking for shows that have already started/completed
+        if (new Date(show.startTime) < new Date()) {
+            return res.status(400).json({ message: 'This show has already started or completed' });
+        }
+
         // Check if seats are already booked
         const alreadyBooked = show.bookedSeats.some(bs => seats.includes(bs.seatNumber));
         if (alreadyBooked) return res.status(400).json({ message: 'One or more seats already booked' });
