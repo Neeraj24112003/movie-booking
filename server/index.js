@@ -22,6 +22,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'http://127.0.0.1:5173',
+        'http://10.243.156.84:5173',
         process.env.CLIENT_URL // Add your Vercel URL here via environment variable
     ].filter(Boolean),
     credentials: true
