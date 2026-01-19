@@ -19,18 +19,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: [
-    'https://movie-booking-j2a36y0id-neeraj24112003s-projects.vercel.app',
-    process.env.CLIENT_URL
-  ].filter(Boolean),
-  credentials: true
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    credentials: true
 }));
 
 // Database
 mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
-  .catch((err) => console.error('MongoDB connection error:', err));
+    .connect(process.env.MONGODB_URI)
+    .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRouter);
@@ -40,22 +37,22 @@ app.use('/api/shows', showRouter);
 app.use('/api/bookings', bookingRouter);
 
 app.get('/api', (req, res) => {
-  res.json({ success: true, message: 'Online Movie Ticket Booking API is running...' });
+    res.json({ success: true, message: 'Online Movie Ticket Booking API is running...' });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  res.status(statusCode).json({
-    success: false,
-    statusCode,
-    message,
-  });
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message,
+    });
 });
 
 // Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
