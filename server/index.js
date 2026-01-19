@@ -20,9 +20,7 @@ app.use(express.json());
 
 app.use(cors({
     origin: [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://10.243.156.84:5173',
+        'https://movie-booking-j2a36y0id-neeraj24112003s-projects.vercel.app',
         process.env.CLIENT_URL // Add your Vercel URL here via environment variable
     ].filter(Boolean),
     credentials: true
@@ -68,3 +66,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
