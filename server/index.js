@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import path from 'path';
+
 import authRouter from './routes/authRoute.js';
 import movieRouter from './routes/movieRoute.js';
 import theaterRouter from './routes/theaterRoute.js';
@@ -16,21 +16,21 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-
-
-app.use(cors({
-    origin: [
-        'https://movie-booking-j2a36y0id-neeraj24112003s-projects.vercel.app',
-        process.env.CLIENT_URL // Add your Vercel URL here via environment variable
-    ].filter(Boolean),
-    credentials: true
-}));
 app.use(cookieParser());
 
-// Database Connection
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URL)
-    .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
-    .catch((err) => console.error('MongoDB connection error:', err));
+app.use(cors({
+  origin: [
+    'https://movie-booking-j2a36y0id-neeraj24112003s-projects.vercel.app',
+    process.env.CLIENT_URL
+  ].filter(Boolean),
+  credentials: true
+}));
+
+// Database
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log(`Connected to MongoDB: ${mongoose.connection.name}`))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRouter);
@@ -40,30 +40,22 @@ app.use('/api/shows', showRouter);
 app.use('/api/bookings', bookingRouter);
 
 app.get('/api', (req, res) => {
-    res.send('Online Movie Ticket Booking API is running...');
-});
-
-const __dirname = path.resolve();
-
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
+  res.json({ success: true, message: 'Online Movie Ticket Booking API is running...' });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
-    return res.status(statusCode).json({
-        success: false,
-        statusCode,
-        message,
-    });
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
 });
 
+// Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
-
